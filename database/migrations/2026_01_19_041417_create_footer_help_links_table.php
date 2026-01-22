@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('footer_help_links', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->text('url');
             $table->timestamps();
         });
     }

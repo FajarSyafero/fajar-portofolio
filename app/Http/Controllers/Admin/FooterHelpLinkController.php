@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\DataTables\FooterHelpLinkDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\FooterHelpLink;
+
+use function Flasher\Toastr\Prime\toastr;
 
 class FooterHelpLinkController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(FooterHelpLinkDataTable $dataTable)
     {
-        //
+        return $dataTable->render('admin.footer-help-link.index');
     }
 
     /**
@@ -20,7 +24,7 @@ class FooterHelpLinkController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.footer-help-link.create');
     }
 
     /**
@@ -28,7 +32,18 @@ class FooterHelpLinkController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'max:200'],
+            'url' => ['required',]
+        ]);
+
+        $link = new \App\Models\FooterHelpLink();
+        $link->name = $request->name;
+        $link->url  = $request->url;
+        $link->save();
+
+        toastr('Create Succesfully!');
+        return redirect()->route('admin.footer-help-links.index');
     }
 
     /**
@@ -44,7 +59,8 @@ class FooterHelpLinkController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $link = FooterHelpLink::findOrFail($id);
+        return view('admin.footer-help-link.edit', compact('link'));
     }
 
     /**
@@ -52,7 +68,18 @@ class FooterHelpLinkController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'max:200'],
+            'url' => ['required',]
+        ]);
+
+        $link = FooterHelpLink::findOrFail($id);
+        $link->name = $request->name;
+        $link->url  = $request->url;
+        $link->save();
+
+        toastr('Create Succesfully!');
+        return redirect()->route('admin.footer-help-links.index');
     }
 
     /**
@@ -60,6 +87,7 @@ class FooterHelpLinkController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $link = FooterHelpLink::findOrFail($id);
+        $link ->delete();
     }
 }
